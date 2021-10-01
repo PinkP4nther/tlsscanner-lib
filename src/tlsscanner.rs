@@ -1,6 +1,6 @@
 use crate::*;
 
-impl TlsScanner {
+impl TlsScanner<'_> {
 
     pub fn scan(&self) -> ScanResult {
 

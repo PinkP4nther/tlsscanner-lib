@@ -23,10 +23,10 @@ pub struct ScanResult {
     pub tls13: TLSDetect,
 }
 
-pub struct TlsScanner(
-    pub &'static str, /* TCP Host */
-    pub &'static str, /* TCP Port */
-    pub &'static str, /* Certificate CN Host */
+pub struct TlsScanner<'a>(
+    pub &'a str, /* TCP Host */
+    pub &'a str, /* TCP Port */
+    pub &'a str, /* Certificate CN Host */
 );
 
 mod tlsscanner;

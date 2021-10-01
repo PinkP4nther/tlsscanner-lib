@@ -1,6 +1,6 @@
 [package]
 name = "tlsscanner"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2018"
 authors = ["PinkP4nther <pinkp4nther@protonmail.com>"]
 
