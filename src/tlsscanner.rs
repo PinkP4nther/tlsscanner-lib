@@ -21,33 +21,53 @@ impl TlsScanner {
         let connector = ssl_builder.build();
 
         let tcp_host = format!("{}:{}", self.0, self.1);
-    
         let stream = TcpStream::connect(tcp_host).unwrap();
     
         match connector.connect(self.2, stream) {
             Ok(_) => TLSDetect::Enabled,
-            Err(_) => TLSDetect::Disabled,
+            Err(e) => {
+                if let HandshakeError::Failure(hse) = e {
+                    if let Some(ssle) = hse.error().ssl_error() {
+                        for error in ssle.errors() {
+                            if error.code() == 337539263 {
+                                return TLSDetect::Disabled;
+                            }
+                        }
+                    }
+                    TLSDetect::Failed
+                } else {
+                    TLSDetect::Failed
+                }
+            },
         }
     }
 }
 
 impl TLSDetect {
+
     pub fn as_str(&self) -> &'static str {
-        if let TLSDetect::Enabled = self {"Enabled"} else {"Disabled"}
+        match self {
+            TLSDetect::Enabled => "Enabled",
+            TLSDetect::Disabled => "Disabled",
+            TLSDetect::Failed => "Failed",
+        }
     }
 
     pub fn as_u8(&self) -> u8 {
-        if let TLSDetect::Enabled = self {1} else {0}
-    }
-
-    pub fn as_bool(&self) -> bool {
-        if let TLSDetect::Enabled = self {true} else {false}
+        match self {
+            TLSDetect::Enabled => 1,
+            TLSDetect::Disabled => 0,
+            TLSDetect::Failed => 2,
+        }
     }
 }
 
 impl fmt::Display for TLSDetect {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if let TLSDetect::Enabled = self {write!(f, "Enabled")}
-        else {write!(f, "Disabled")}
+        match self {
+            TLSDetect::Enabled => write!(f, "Enabled"),
+            TLSDetect::Disabled => write!(f, "Disabled"),
+            TLSDetect::Failed => write!(f, "Failed"),
+        }
     }
 }

@@ -2,6 +2,7 @@ use openssl::ssl::{
     SslConnector,
     SslMethod,
     SslOptions,
+    HandshakeError,
 };
 use std::net::TcpStream;
 use std::fmt;
@@ -9,6 +10,7 @@ use std::fmt;
 pub enum TLSDetect {
     Enabled,
     Disabled,
+    Failed,
 }
 
 pub struct ScanResult {
