@@ -2,6 +2,7 @@ use openssl::ssl::{
     SslConnector,
     SslMethod,
     SslOptions,
+    SslVerifyMode,
     HandshakeError,
 };
 use std::net::TcpStream;

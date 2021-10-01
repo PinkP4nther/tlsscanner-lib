@@ -18,6 +18,7 @@ impl TlsScanner {
     
         let mut ssl_builder = SslConnector::builder(SslMethod::tls()).unwrap();
         ssl_builder.set_options(version);
+        ssl_builder.set_verify(SslVerifyMode::NONE);
         let connector = ssl_builder.build();
 
         let tcp_host = format!("{}:{}", self.0, self.1);
